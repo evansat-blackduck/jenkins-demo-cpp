@@ -77,7 +77,7 @@ pipeline {
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
-                        --build_cmd 'make VERBOSE=1' \
+                        --build_cmd 'cmake . && make VERBOSE=1' \
                         --build_dir . \
                         --verbose true \
                         --debug true
@@ -93,7 +93,7 @@ pipeline {
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
-                        --build_cmd 'make VERBOSE=1' \
+                        --build_cmd 'cmake . && make VERBOSE=1' \
                         --build_dir . \
                         --verbose true \
                         --debug true
