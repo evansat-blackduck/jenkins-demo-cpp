@@ -34,8 +34,8 @@ pipeline {
                     echo ". $(pwd)/venv/bin/activate" > activate_venv.sh
                     chmod +x activate_venv.sh
                     echo "#!/bin/bash" > build_all.sh
-                    echo "cd server && make" >> build_all.sh
-                    echo "cd ../client && make" >> build_all.sh
+                    echo "cd server && cmake . && make" >> build_all.sh
+                    echo "cd ../client && cmake . && make" >> build_all.sh
                     chmod +x build_all.sh
                     echo "Listing workspace after Init:"
                     find . -name "activate_venv.sh"
