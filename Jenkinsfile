@@ -17,9 +17,12 @@ pipeline {
 		        // Check Python and pip availability
 		        sh 'python3 --version || python --version'
 		        sh 'pip3 --version || pip --version'
-		
-		        // Install Black Duck C/C++ scanner
-		        sh 'pip3 install blackduck-c-cpp'
+			sh '''
+   		            python3 -m venv venv
+			    . venv/bin/activate
+			    pip install blackduck-c-cpp
+			    echo "source $WORKSPACE/venv/bin/activate" > activate_venv.sh
+			   '''
 		    }
 		}
 		stage ('Clean') {
@@ -49,7 +52,7 @@ pipeline {
 				  --api_token $BLACKDUCK_API_TOKEN \
 				  --project_name jenkins-demo-cpp \
 				  --project_version 1.0.0 \
-      				  --additional_sig_scan_args: '--snippet-matching' \
+      				  --additional_sig_scan_args '--snippet-matching' \
       				  --skip_build false \
 	    			  --skip_transitives false \
 				  --build_cmd "make" \
