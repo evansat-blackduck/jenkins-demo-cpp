@@ -18,16 +18,15 @@ pipeline {
                     python3.8 -m venv venv
                 '''
                 sh '''
-                    source venv/bin/activate && \
+                    . venv/bin/activate && \
                     pip install --upgrade pip && \
                     pip install Cython==0.29.36 && \
                     pip install numpy==1.24.4 && \
                     pip install blackduck-c-cpp && \
-                    echo "source $(pwd)/venv/bin/activate" > activate_venv.sh
+                    echo ". $(pwd)/venv/bin/activate" > activate_venv.sh
                 '''
             }
         }
-
 
         stage('Clean') {
             steps {
@@ -51,8 +50,12 @@ pipeline {
             steps {
                 sh '''
                     echo "Sourcing virtual environment..."
+                    if [ ! -f activate_venv.sh ]; then
+                        echo "ERROR: activate_venv.sh not found!"
+                        exit 1
+                    fi
                     cat activate_venv.sh
-                    source activate_venv.sh
+                    . activate_venv.sh
                     blackduck-c-cpp \
                         --bd_url https://evansat-bd.illcommotion.com \
                         --api_token $BLACKDUCK_API_TOKEN \
