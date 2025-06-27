@@ -18,7 +18,7 @@ pipeline {
 		        sh 'python3 --version || python --version'
 		        sh 'pip3 --version || pip --version'
 			sh '''
-   		            python3 -m venv venv
+   		            python3.8 -m venv venv
 			    . venv/bin/activate
 			    pip install blackduck-c-cpp
 			    echo "source $WORKSPACE/venv/bin/activate" > activate_venv.sh
