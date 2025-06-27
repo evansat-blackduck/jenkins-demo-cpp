@@ -67,7 +67,8 @@ pipeline {
                     fi
                     . "$WORKSPACE/activate_venv.sh"
 
-                    echo "Running Black Duck scan for server..."
+                    echo "Scanning server..."
+                    cd server
                     blackduck-c-cpp \
                         --bd_url https://evansat-bd.illcommotion.com \
                         --api_token $BLACKDUCK_API_TOKEN \
@@ -77,21 +78,26 @@ pipeline {
                         --skip_build false \
                         --skip_transitives false \
                         --build_cmd 'make VERBOSE=1' \
-                        --build_dir "$WORKSPACE/server" \
-                        --verbose true
+                        --build_dir . \
+                        --verbose true \
+                        --debug true
+                    // cd ..
 
-                    echo "Running Black Duck scan for client..."
-                    blackduck-c-cpp \
-                        --bd_url https://evansat-bd.illcommotion.com \
-                        --api_token $BLACKDUCK_API_TOKEN \
-                        --project_name jenkins-demo-cpp \
-                        --project_version 1.0.0 \
-                        --additional_sig_scan_args="--snippet-matching" \
-                        --skip_build false \
-                        --skip_transitives false \
-                        --build_cmd 'make VERBOSE=1' \
-                        --build_dir "$WORKSPACE/client" \
-                        --verbose true
+                    // echo "Scanning client..."
+                    // cd client
+                    // blackduck-c-cpp \
+                    //     --bd_url https://evansat-bd.illcommotion.com \
+                    //     --api_token $BLACKDUCK_API_TOKEN \
+                    //     --project_name jenkins-demo-cpp \
+                    //     --project_version 1.0.0 \
+                    //     --additional_sig_scan_args="--snippet-matching" \
+                    //     --skip_build false \
+                    //     --skip_transitives false \
+                    //     --build_cmd 'make VERBOSE=1' \
+                    //     --build_dir . \
+                    //     --verbose true \
+                    //     --debug true
+                    // cd ..
                 '''
             }
         }
