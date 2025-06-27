@@ -1,8 +1,10 @@
 pipeline {
     agent any
+
     environment {
         BLACKDUCK_API_TOKEN = credentials('BLACKDUCK_API_TOKEN')
     }
+
     stages {
         stage('Inspect Workspace') {
             steps {
@@ -31,21 +33,19 @@ pipeline {
                     pip install blackduck-c-cpp
                     echo ". $(pwd)/venv/bin/activate" > activate_venv.sh
                     chmod +x activate_venv.sh
+                    echo "#!/bin/bash" > build_all.sh
+                    echo "cd server && make" >> build_all.sh
+                    echo "cd ../client && make" >> build_all.sh
+                    chmod +x build_all.sh
                     echo "Listing workspace after Init:"
                     find . -name "activate_venv.sh"
                 '''
             }
         }
 
-        stage('Build Server') {
+        stage('Build (for verification)') {
             steps {
-                sh "cd server && cmake . && make"
-            }
-        }
-
-        stage('Build Client') {
-            steps {
-                sh "cd client && cmake . && make"
+                sh './build_all.sh'
             }
         }
 
@@ -57,7 +57,6 @@ pipeline {
                         echo "ERROR: activate_venv.sh not found!"
                         exit 1
                     fi
-                    cat "$WORKSPACE/activate_venv.sh"
                     . "$WORKSPACE/activate_venv.sh"
                     blackduck-c-cpp \
                         --bd_url https://evansat-bd.illcommotion.com \
@@ -67,7 +66,7 @@ pipeline {
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
-                        --build_cmd 'make' \
+                        --build_cmd './build_all.sh' \
                         --build_dir "$WORKSPACE" \
                         --verbose true
                 '''
