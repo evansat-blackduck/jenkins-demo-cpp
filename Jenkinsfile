@@ -1,6 +1,9 @@
 pipeline {
     agent any
-
+    
+    environment {
+            BLACKDUCK_API_TOKEN = credentials('BLACKDUCK_API_TOKEN')
+    }
     stages {
         stage('Inspect Workspace') {
             steps {
