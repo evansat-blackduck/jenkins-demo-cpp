@@ -11,6 +11,7 @@ pipeline {
                 '''
             }
         }
+
         stage("Init") {
             steps {
                 sh '''
@@ -26,6 +27,7 @@ pipeline {
                 '''
             }
         }
+
         stage('Clean') {
             steps {
                 sh "git clean -fdx"
