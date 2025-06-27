@@ -12,6 +12,12 @@ pipeline {
             }
         }
 
+        stage('Clean') {
+            steps {
+                sh "git clean -fdx"
+            }
+        }
+
         stage("Init") {
             steps {
                 sh '''
@@ -26,12 +32,6 @@ pipeline {
                     echo "Listing workspace after Init:"
                     find . -name "activate_venv.sh"
                 '''
-            }
-        }
-
-        stage('Clean') {
-            steps {
-                sh "git clean -fdx"
             }
         }
 
