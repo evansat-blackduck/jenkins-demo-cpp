@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         BLACKDUCK_API_TOKEN = credentials('BLACKDUCK_API_TOKEN')
+        CC = 'gcc'
+        CXX = 'g++'
     }
 
     stages {
@@ -18,7 +20,10 @@ pipeline {
 
         stage('Clean') {
             steps {
-                sh "git clean -fdx"
+                sh '''
+                    git clean -fdx
+                    rm -rf ~/.blackduck/blackduck-c-cpp/output/*
+                '''
             }
         }
 
@@ -31,12 +36,15 @@ pipeline {
                     pip install Cython==0.29.36
                     pip install numpy==1.24.4
                     pip install blackduck-c-cpp
+
                     echo ". $(pwd)/venv/bin/activate" > activate_venv.sh
                     chmod +x activate_venv.sh
+
                     echo "#!/bin/bash" > build_all.sh
-                    echo "cd server && cmake . && make" >> build_all.sh
-                    echo "cd ../client && cmake . && make" >> build_all.sh
+                    echo "cd server && cmake . && make VERBOSE=1" >> build_all.sh
+                    echo "cd ../client && cmake . && make VERBOSE=1" >> build_all.sh
                     chmod +x build_all.sh
+
                     echo "Listing workspace after Init:"
                     find . -name "activate_venv.sh"
                 '''
@@ -58,6 +66,8 @@ pipeline {
                         exit 1
                     fi
                     . "$WORKSPACE/activate_venv.sh"
+
+                    echo "Running Black Duck scan for server..."
                     blackduck-c-cpp \
                         --bd_url https://evansat-bd.illcommotion.com \
                         --api_token $BLACKDUCK_API_TOKEN \
@@ -66,11 +76,33 @@ pipeline {
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
-                        --build_cmd './build_all.sh' \
-                        --build_dir "$WORKSPACE" \
+                        --build_cmd 'make VERBOSE=1' \
+                        --build_dir "$WORKSPACE/server" \
+                        --verbose true
+
+                    echo "Running Black Duck scan for client..."
+                    blackduck-c-cpp \
+                        --bd_url https://evansat-bd.illcommotion.com \
+                        --api_token $BLACKDUCK_API_TOKEN \
+                        --project_name jenkins-demo-cpp \
+                        --project_version 1.0.0 \
+                        --additional_sig_scan_args="--snippet-matching" \
+                        --skip_build false \
+                        --skip_transitives false \
+                        --build_cmd 'make VERBOSE=1' \
+                        --build_dir "$WORKSPACE/client" \
                         --verbose true
                 '''
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed. Cleaning up...'
+        }
+        failure {
+            echo 'Pipeline failed. Please check logs for details.'
         }
     }
 }
