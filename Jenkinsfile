@@ -10,7 +10,7 @@ pipeline {
 		        sh 'pip3 --version || pip --version'
 		
 		        // Install Black Duck C/C++ scanner
-		        sh 'pip install blackduck-c-cpp'
+		        sh 'pip3 install blackduck-c-cpp'
 		    }
 		}
 		stage ('Clean') {
