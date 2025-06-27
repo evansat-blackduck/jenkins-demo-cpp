@@ -78,7 +78,7 @@ pipeline {
                         --skip_build false \
                         --skip_transitives false \
                         --build_cmd 'rm -rf build && cmake . && make VERBOSE=1' \
-                        --build_dir "$WORKSPACE/server" \
+                        --build_dir "$WORKSPACE" \
                         --verbose true \
                         --debug true
                     cd ..
@@ -94,7 +94,7 @@ pipeline {
                         --skip_build false \
                         --skip_transitives false \
                         --build_cmd 'rm -rf build && cmake . && make VERBOSE=1' \
-                        --build_dir "$WORKSPACE/client" \
+                        --build_dir "$WORKSPACE" \
                         --verbose true \
                         --debug true
                     cd ..
