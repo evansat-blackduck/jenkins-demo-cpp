@@ -23,10 +23,11 @@ pipeline {
                              pip install Cython==0.29.36 && \
                              pip install numpy==1.24.4 && \
                              pip install blackduck-c-cpp && \
-                             echo 'source $WORKSPACE/venv/bin/activate' > activate_venv.sh"
+                             echo 'source $(pwd)/venv/bin/activate' > activate_venv.sh"
                 '''
             }
         }
+
 
         stage('Clean') {
             steps {
