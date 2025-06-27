@@ -53,9 +53,9 @@ pipeline {
 			              --skip_transitives false \
 			              --build_cmd 'make' \
 			              --build_dir '$WORKSPACE' \
-			              --verbose true"
-			        '''
-			    }
+		 		      --verbose true"
+			    '''
+		    }
 		}
 	}
 }
