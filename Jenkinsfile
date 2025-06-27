@@ -50,7 +50,10 @@ pipeline {
         stage('Black Duck Scan') {
             steps {
                 sh '''
-                    bash -c "source activate_venv.sh && blackduck-c-cpp \
+                    echo "Sourcing virtual environment..."
+                    cat activate_venv.sh
+                    source activate_venv.sh
+                    blackduck-c-cpp \
                         --bd_url https://evansat-bd.illcommotion.com \
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
@@ -59,8 +62,8 @@ pipeline {
                         --skip_build false \
                         --skip_transitives false \
                         --build_cmd 'make' \
-                        --build_dir '$WORKSPACE' \
-                        --verbose true"
+                        --build_dir "$WORKSPACE" \
+                        --verbose true
                 '''
             }
         }
