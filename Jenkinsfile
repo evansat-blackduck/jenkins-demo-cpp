@@ -64,7 +64,7 @@ pipeline {
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
                         --project_version 1.0.0 \
-                        --additional_sig_scan_args "--snippet-matching" \
+                        --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
                         --build_cmd 'make' \
