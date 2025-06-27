@@ -23,7 +23,8 @@ pipeline {
                     pip install blackduck-c-cpp
                     echo ". $(pwd)/venv/bin/activate" > activate_venv.sh
                     chmod +x activate_venv.sh
-                    ls -l activate_venv.sh
+                    echo "Listing workspace after Init:"
+                    find . -name "activate_venv.sh"
                 '''
             }
         }
