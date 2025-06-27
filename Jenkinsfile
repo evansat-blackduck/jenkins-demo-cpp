@@ -18,7 +18,14 @@ pipeline {
 		        sh 'python3.8 --version || python --version'
 		        sh 'pip3 --version || pip --version'
 			sh 'python3.8 -m venv venv'
-			sh 'bash -c "source venv/bin/activate && pip install blackduck-c-cpp && echo \'source $WORKSPACE/venv/bin/activate\' > activate_venv.sh"'
+			
+			sh '''
+		            bash -c "source venv/bin/activate && \
+		                     pip install numpy && \
+		                     pip install blackduck-c-cpp && \
+		                     echo 'source $WORKSPACE/venv/bin/activate' > activate_venv.sh"
+		        '''
+
 		    }
 		}
 		stage ('Clean') {
