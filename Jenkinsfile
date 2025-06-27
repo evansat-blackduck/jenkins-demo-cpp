@@ -32,6 +32,20 @@ pipeline {
 				sh "cd client && cmake . && make"
 			}
 		}
-		
+		stage('Black Duck Scan') {
+		    steps {
+		        sh '''
+		            blackduck-c-cpp scan \
+				  --bd_url https://your.blackduck.server \
+				  --api_token $BLACKDUCK_API_TOKEN \
+				  --project_name jenkins-demo-cpp \
+				  --project_version 1.0.0 \
+				  --path ./server \
+				  --build_cmd "make" \
+				  --build_dir ./
+
+		        '''
+		    }
+		}
 	}
 }
