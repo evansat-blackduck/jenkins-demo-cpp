@@ -15,14 +15,12 @@ pipeline {
 		stage("Init") {
 		    steps {
 		        // Check Python and pip availability
-		        sh 'python3 --version || python --version'
+		        sh 'python3.8 --version || python --version'
 		        sh 'pip3 --version || pip --version'
-			sh '''
-   		            python3.8 -m venv venv
-			    . venv/bin/activate
-			    pip install blackduck-c-cpp
-			    echo "source $WORKSPACE/venv/bin/activate" > activate_venv.sh
-			   '''
+			sh 'python3.8 -m venv venv'
+        		sh 'bash -c "source venv/bin/activate && pip install blackduck-c-cpp"'
+        		sh 'echo "source $WORKSPACE/venv/bin/activate" > activate_venv.sh'
+
 		    }
 		}
 		stage ('Clean') {
@@ -47,19 +45,17 @@ pipeline {
 		stage('Black Duck Scan') {
 		    steps {
 		        sh '''
-	  		    . activate_venv.sh
-		            blackduck-c-cpp \
-				  --bd_url https://evansat-bd.illcommotion.com \
-				  --api_token $BLACKDUCK_API_TOKEN \
-				  --project_name jenkins-demo-cpp \
-				  --project_version 1.0.0 \
-      				  --additional_sig_scan_args '--snippet-matching' \
-      				  --skip_build false \
-	    			  --skip_transitives false \
-				  --build_cmd "make" \
-				  --build_dir "$WORKSPACE" \
-      				  --verbose true
-
+	  			bash -c "source activate_venv.sh && blackduck-c-cpp \
+				              --bd_url https://evansat-bd.illcommotion.com \
+				              --api_token $BLACKDUCK_API_TOKEN \
+				              --project_name jenkins-demo-cpp \
+				              --project_version 1.0.0 \
+				              --additional_sig_scan_args '--snippet-matching' \
+				              --skip_build false \
+				              --skip_transitives false \
+				              --build_cmd 'make' \
+				              --build_dir '$WORKSPACE' \
+				              --verbose true"
 		        '''
 		    }
 		}
