@@ -18,12 +18,12 @@ pipeline {
                     python3.8 -m venv venv
                 '''
                 sh '''
-                    bash -c "source venv/bin/activate && \
-                             pip install --upgrade pip && \
-                             pip install Cython==0.29.36 && \
-                             pip install numpy==1.24.4 && \
-                             pip install blackduck-c-cpp && \
-                             echo 'source $(pwd)/venv/bin/activate' > activate_venv.sh"
+                    source venv/bin/activate && \
+                     pip install --upgrade pip && \
+                     pip install Cython==0.29.36 && \
+                     pip install numpy==1.24.4 && \
+                     pip install blackduck-c-cpp && \
+                     echo "source $(pwd)/venv/bin/activate" > activate_venv.sh
                 '''
             }
         }
