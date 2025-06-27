@@ -47,6 +47,7 @@ pipeline {
 		stage('Black Duck Scan') {
 		    steps {
 		        sh '''
+	  		    . activate_venv.sh
 		            blackduck-c-cpp \
 				  --bd_url https://evansat-bd.illcommotion.com \
 				  --api_token $BLACKDUCK_API_TOKEN \
