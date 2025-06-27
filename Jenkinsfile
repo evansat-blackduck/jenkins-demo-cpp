@@ -44,7 +44,7 @@ pipeline {
 		stage('Black Duck Scan') {
 		    steps {
 		        sh '''
-		            blackduck-c-cpp scan \
+		            blackduck-c-cpp \
 				  --bd_url https://evansat-bd.illcommotion.com \
 				  --api_token $BLACKDUCK_API_TOKEN \
 				  --project_name jenkins-demo-cpp \
