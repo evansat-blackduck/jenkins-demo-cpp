@@ -5,12 +5,6 @@ pipeline {
 	stages {
 		stage("Init") {
 		    steps {
-		        script {
-		            groovyScript = load "build.groovy"
-		            os = groovyScript.findOS()
-		            echo 'Building the application...'
-		        }
-		
 		        // Check Python and pip availability
 		        sh 'python3 --version || python --version'
 		        sh 'pip3 --version || pip --version'
