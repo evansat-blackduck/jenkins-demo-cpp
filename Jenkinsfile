@@ -77,8 +77,8 @@ pipeline {
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
-                        --build_cmd 'cmake . && make VERBOSE=1' \
-                        --build_dir "$WORKSPACE/server/src" \
+                        --build_cmd 'cmake . && make clean && make VERBOSE=1' \
+                        --build_dir . \
                         --verbose true \
                         --debug true
                     cd ..
@@ -93,8 +93,8 @@ pipeline {
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
-                        --build_cmd 'cmake . && make VERBOSE=1' \
-                        --build_dir "$WORKSPACE/client/src" \
+                        --build_cmd 'cmake . && make clean && make VERBOSE=1' \
+                        --build_dir . \
                         --verbose true \
                         --debug true
                     cd ..
