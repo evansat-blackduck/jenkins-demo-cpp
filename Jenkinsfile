@@ -44,20 +44,20 @@ pipeline {
 		}
 		stage('Black Duck Scan') {
 		    steps {
-		        sh '''
-	  			bash -c "source activate_venv.sh && blackduck-c-cpp \
-				              --bd_url https://evansat-bd.illcommotion.com \
-				              --api_token $BLACKDUCK_API_TOKEN \
-				              --project_name jenkins-demo-cpp \
-				              --project_version 1.0.0 \
-				              --additional_sig_scan_args '--snippet-matching' \
-				              --skip_build false \
-				              --skip_transitives false \
-				              --build_cmd 'make' \
-				              --build_dir '$WORKSPACE' \
-				              --verbose true"
-		        '''
-		    }
+			sh '''
+			    bash -c "source activate_venv.sh && blackduck-c-cpp \
+			              --bd_url https://evansat-bd.illcommotion.com \
+			              --api_token $BLACKDUCK_API_TOKEN \
+			              --project_name jenkins-demo-cpp \
+			              --project_version 1.0.0 \
+			              --additional_sig_scan_args '--snippet-matching' \
+			              --skip_build false \
+			              --skip_transitives false \
+			              --build_cmd 'make' \
+			              --build_dir '$WORKSPACE' \
+			              --verbose true"
+			        '''
+			    }
 		}
 	}
 }
