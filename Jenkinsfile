@@ -51,12 +51,12 @@ pipeline {
             steps {
                 sh '''
                     echo "Sourcing virtual environment..."
-                    if [ ! -f activate_venv.sh ]; then
+                    if [ ! -f "$WORKSPACE/activate_venv.sh" ]; then
                         echo "ERROR: activate_venv.sh not found!"
                         exit 1
                     fi
-                    cat activate_venv.sh
-                    . activate_venv.sh
+                    cat "$WORKSPACE/activate_venv.sh"
+                    . "$WORKSPACE/activate_venv.sh"
                     blackduck-c-cpp \
                         --bd_url https://evansat-bd.illcommotion.com \
                         --api_token $BLACKDUCK_API_TOKEN \
