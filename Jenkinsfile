@@ -115,10 +115,8 @@ pipeline {
                         --blackduck.api.token=$BLACKDUCK_API_TOKEN \
                         --detect.project.name=jenkins-demo-cpp \
                         --detect.project.version.name=1.0.0 \
-                        --detect.tools=SIGNATURE_SCAN \
                         --detect.source.path=. \
                         --detect.policy.check.fail.on.severities=BLOCKER,CRITICAL \
-                        --detect.tools.excluded=DETECTOR,SIGNATURE_SCAN,IMPACT_ANALYSIS,DOCKER,BAZEL,IAC_SCAN,CONTAINER_SCAN,THREAT_INTEL,COMPONENT_LOCATION_ANALYSIS \
                         --detect.wait.for.results=true \
                         --detect.verbose=true
                 '''
@@ -131,4 +129,7 @@ pipeline {
             echo 'Pipeline completed. Cleaning up...'
         }
         failure {
-            echo '
+            echo 'Pipeline failed. Please check logs for details.'
+        }
+    }
+}
