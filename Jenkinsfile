@@ -106,11 +106,11 @@ pipeline {
             steps {
                 sh '''
                     echo "Downloading Black Duck Detect script..."
-                    curl -s -L -o detect.sh https://detect.synopsys.com/detect.sh
-                    chmod +x detect.sh
+                    curl -s -L -o detect.sh https://detect.synopsys.com/detect10.sh
+                    chmod +x detect10.sh
 
                     echo "Running Black Duck Detect..."
-                    ./detect.sh \
+                    bash detect10.sh \
                         --blackduck.url=https://evansat-bd.illcommotion.com \
                         --blackduck.api.token=$BLACKDUCK_API_TOKEN \
                         --detect.project.name=jenkins-demo-cpp \
