@@ -57,52 +57,52 @@ pipeline {
             }
         }
 
-        // stage('Black Duck Scan') {
-        //     steps {
-        //         sh '''
-        //             echo "Sourcing virtual environment..."
-        //             if [ ! -f "$WORKSPACE/activate_venv.sh" ]; then
-        //                 echo "ERROR: activate_venv.sh not found!"
-        //                 exit 1
-        //             fi
-        //             . "$WORKSPACE/activate_venv.sh"
+        stage('Black Duck C++ Scan') {
+            steps {
+                sh '''
+                    echo "Sourcing virtual environment..."
+                    if [ ! -f "$WORKSPACE/activate_venv.sh" ]; then
+                        echo "ERROR: activate_venv.sh not found!"
+                        exit 1
+                    fi
+                    . "$WORKSPACE/activate_venv.sh"
 
-        //             echo "Scanning server..."
-        //             cd server
-        //             blackduck-c-cpp \
-        //                 --bd_url https://evansat-bd.illcommotion.com \
-        //                 --api_token $BLACKDUCK_API_TOKEN \
-        //                 --project_name jenkins-demo-cpp \
-        //                 --project_version 1.0.0 \
-        //                 --additional_sig_scan_args="--snippet-matching" \
-        //                 --skip_build false \
-        //                 --skip_transitives false \
-        //                 --build_cmd 'cmake . && make clean && make VERBOSE=1' \
-        //                 --build_dir . \
-        //                 --verbose true \
-        //                 --debug true
-        //             cd ..
+                    echo "Scanning server..."
+                    cd server
+                    blackduck-c-cpp \
+                        --bd_url https://evansat-bd.illcommotion.com \
+                        --api_token $BLACKDUCK_API_TOKEN \
+                        --project_name jenkins-demo-cpp \
+                        --project_version 2.0.0 \
+                        --additional_sig_scan_args="--snippet-matching" \
+                        --skip_build false \
+                        --skip_transitives false \
+                        --build_cmd 'cmake . && make clean && make VERBOSE=1' \
+                        --build_dir . \
+                        --verbose true \
+                        --debug true
+                    cd ..
 
-        //             echo "Scanning client..."
-        //             cd client
-        //             blackduck-c-cpp \
-        //                 --bd_url https://evansat-bd.illcommotion.com \
-        //                 --api_token $BLACKDUCK_API_TOKEN \
-        //                 --project_name jenkins-demo-cpp \
-        //                 --project_version 1.0.0 \
-        //                 --additional_sig_scan_args="--snippet-matching" \
-        //                 --skip_build false \
-        //                 --skip_transitives false \
-        //                 --build_cmd 'cmake . && make clean && make VERBOSE=1' \
-        //                 --build_dir . \
-        //                 --verbose true \
-        //                 --debug true
-        //             cd ..
-        //         '''
-        //     }
-        // }
+                    echo "Scanning client..."
+                    cd client
+                    blackduck-c-cpp \
+                        --bd_url https://evansat-bd.illcommotion.com \
+                        --api_token $BLACKDUCK_API_TOKEN \
+                        --project_name jenkins-demo-cpp \
+                        --project_version 2.0.0 \
+                        --additional_sig_scan_args="--snippet-matching" \
+                        --skip_build false \
+                        --skip_transitives false \
+                        --build_cmd 'cmake . && make clean && make VERBOSE=1' \
+                        --build_dir . \
+                        --verbose true \
+                        --debug true
+                    cd ..
+                '''
+            }
+        }
 
-        stage('Black Duck Detect (CLI)') {
+        stage('Black Duck Detect Policy Violation Scan') {
             steps {
                 sh '''
                     echo "Downloading Black Duck Detect script..."
@@ -114,8 +114,9 @@ pipeline {
                         --blackduck.url=https://evansat-bd.illcommotion.com \
                         --blackduck.api.token=$BLACKDUCK_API_TOKEN \
                         --detect.project.name=jenkins-demo-cpp \
-                        --detect.project.version.name=1.0.0 \
+                        --detect.project.version.name=2.0.0 \
                         --detect.source.path=. \
+                        --detect.tools.excluded=DETECTOR,SIGNATURE_SCAN,IMPACT_ANALYSIS,DOCKER,BAZEL,IAC_SCAN,CONTAINER_SCAN,THREAT_INTEL,COMPONENT_LOCATION_ANALYSIS \
                         --detect.policy.check.fail.on.severities=BLOCKER,CRITICAL \
                         --detect.wait.for.results=true \
                         --detect.verbose=true
