@@ -116,6 +116,7 @@ pipeline {
                         --detect.project.name=jenkins-demo-cpp \
                         --detect.project.version.name=2.0.0 \
                         --detect.source.path=. \
+                        --detect.policy.check.fail.on.severities=BLOCKER,CRITICAL \
                         --detect.tools.excluded=DETECTOR,SIGNATURE_SCAN,IMPACT_ANALYSIS,DOCKER,BAZEL,IAC_SCAN,CONTAINER_SCAN,THREAT_INTEL,COMPONENT_LOCATION_ANALYSIS \
                         --detect.wait.for.results=true \
                         --detect.verbose=true
