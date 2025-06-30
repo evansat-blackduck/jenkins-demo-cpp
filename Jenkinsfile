@@ -106,7 +106,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Downloading Black Duck Detect script..."
-                    curl -s -L -o detect10.sh https://detect.synopsys.com/detect10.sh
+                    curl -s -L -o detect10.sh https://detect.blackduck.com/detect10.sh
                     chmod +x detect10.sh
 
                     echo "Running Black Duck Detect..."
