@@ -70,7 +70,7 @@ pipeline {
                     echo "Scanning server..."
                     cd server
                     blackduck-c-cpp \
-                        --bd_url https://evansat-bd.illcommotion.com \
+                        --bd_url $BLACKDUCK_URL \
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
                         --project_version 2.0.0 \
@@ -86,7 +86,7 @@ pipeline {
                     echo "Scanning client..."
                     cd client
                     blackduck-c-cpp \
-                        --bd_url https://evansat-bd.illcommotion.com \
+                        --bd_url $BLACKDUCK_URL \
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
                         --project_version 2.0.0 \
@@ -111,7 +111,7 @@ pipeline {
 
                     echo "Running Black Duck Detect..."
                     bash detect10.sh \
-                        --blackduck.url=https://evansat-bd.illcommotion.com \
+                        --blackduck.url=$BLACKDUCK_URL \
                         --blackduck.api.token=$BLACKDUCK_API_TOKEN \
                         --detect.project.name=jenkins-demo-cpp \
                         --detect.project.version.name=2.0.0 \
