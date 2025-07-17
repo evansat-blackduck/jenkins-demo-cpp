@@ -73,7 +73,7 @@ pipeline {
                         --bd_url $BLACKDUCK_URL \
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
-                        --project_version 2.0.0 \
+                        --project_version 4.0.0 \
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
@@ -89,7 +89,7 @@ pipeline {
                         --bd_url $BLACKDUCK_URL \
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
-                        --project_version 2.0.0 \
+                        --project_version 4.0.0 \
                         --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
@@ -114,7 +114,7 @@ pipeline {
                         --blackduck.url=$BLACKDUCK_URL \
                         --blackduck.api.token=$BLACKDUCK_API_TOKEN \
                         --detect.project.name=jenkins-demo-cpp \
-                        --detect.project.version.name=2.0.0 \
+                        --detect.project.version.name=4.0.0 \
                         --detect.policy.check.fail.on.severities=BLOCKER,CRITICAL \
                         --detect.tools.excluded=DETECTOR,SIGNATURE_SCAN,IMPACT_ANALYSIS,DOCKER,BAZEL,IAC_SCAN,CONTAINER_SCAN,THREAT_INTEL,COMPONENT_LOCATION_ANALYSIS \
                         --detect.source.path=. \
