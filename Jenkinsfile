@@ -114,7 +114,7 @@ pipeline {
                         --blackduck.url=$BLACKDUCK_URL \
                         --blackduck.api.token=$BLACKDUCK_API_TOKEN \
                         --detect.project.name=jenkins-demo-cpp \
-                        --detect.project.version.name=2.0.0 \
+                        --detect.project.version.name=3.0.0 \
                         --detect.source.path=. \
                         --detect.wait.for.results=true \
                         --detect.verbose=true
