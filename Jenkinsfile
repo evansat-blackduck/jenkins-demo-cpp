@@ -73,8 +73,8 @@ pipeline {
                         --bd_url $BLACKDUCK_URL \
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
-                        --project_version 3.0.0 \
-                        --additional_sig_scan_args="--snippet-matching --exclude-from var/lib/jenkins/workspace/jenkins-demo-cpp/server/CMakeFiles" \
+                        --project_version 2.0.0 \
+                        --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
                         --build_cmd 'cmake . && make clean && make VERBOSE=1' \
@@ -89,8 +89,8 @@ pipeline {
                         --bd_url $BLACKDUCK_URL \
                         --api_token $BLACKDUCK_API_TOKEN \
                         --project_name jenkins-demo-cpp \
-                        --project_version 3.0.0 \
-                        --additional_sig_scan_args="--snippet-matching --exclude-from var/lib/jenkins/workspace/jenkins-demo-cpp/client/CMakeFiles" \
+                        --project_version 2.0.0 \
+                        --additional_sig_scan_args="--snippet-matching" \
                         --skip_build false \
                         --skip_transitives false \
                         --build_cmd 'cmake . && make clean && make VERBOSE=1' \
@@ -114,7 +114,9 @@ pipeline {
                         --blackduck.url=$BLACKDUCK_URL \
                         --blackduck.api.token=$BLACKDUCK_API_TOKEN \
                         --detect.project.name=jenkins-demo-cpp \
-                        --detect.project.version.name=3.0.0 \
+                        --detect.project.version.name=2.0.0 \
+                        --detect.policy.check.fail.on.severities=BLOCKER,CRITICAL \
+                        --detect.tools.excluded=DETECTOR,SIGNATURE_SCAN,IMPACT_ANALYSIS,DOCKER,BAZEL,IAC_SCAN,CONTAINER_SCAN,THREAT_INTEL,COMPONENT_LOCATION_ANALYSIS \
                         --detect.source.path=. \
                         --detect.wait.for.results=true \
                         --detect.verbose=true
