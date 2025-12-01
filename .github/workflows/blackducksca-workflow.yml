@@ -94,7 +94,8 @@ jobs:
             -od ../blackduck-cpp-output/${{ matrix.component }} \
             -proj "jenkins-demo-cpp-${{ matrix.component }}" \
             -vers "${{ github.sha }}" \
-            -i false
+            -i false \
+            --additional_sig_scan_args: '--snippet-matching --license-search'
         env:
           BLACKDUCKSCA_URL: ${{ vars.BLACKDUCKSCA_URL }}
           BLACKDUCKSCA_TOKEN: ${{ secrets.BLACKDUCKSCA_TOKEN }}
@@ -142,7 +143,8 @@ jobs:
             -od ./blackduck-cpp-output/full-project \
             -proj "jenkins-demo-cpp-full" \
             -vers "${{ github.sha }}" \
-            -i false
+            -i false \
+            --additional_sig_scan_args: '--snippet-matching --license-search'
         env:
           BLACKDUCKSCA_URL: ${{ vars.BLACKDUCKSCA_URL }}
           BLACKDUCKSCA_TOKEN: ${{ secrets.BLACKDUCKSCA_TOKEN }}
