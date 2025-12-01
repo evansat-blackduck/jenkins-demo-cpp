@@ -68,7 +68,7 @@ jobs:
       - name: Setup Python for Black Duck C/C++ Scanner
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: Install Black Duck C/C++ Scanner
         run: pip install blackduck-c-cpp==3.0.5
@@ -87,14 +87,14 @@ jobs:
         run: |
           cd ${{ matrix.component }}
           blackduck-c-cpp \
-            --bd_url ${{ vars.BLACKDUCKSCA_URL }} \
-            --api_token ${{ secrets.BLACKDUCKSCA_TOKEN }} \
-            --build_cmd "cmake . && make" \
-            --build_dir . \
-            --output_path ../blackduck-cpp-output/${{ matrix.component }} \
-            --project_name "jenkins-demo-cpp-${{ matrix.component }}" \
-            --project_version "${{ github.sha }}" \
-            --insecure false
+            -bd ${{ vars.BLACKDUCKSCA_URL }} \
+            -a ${{ secrets.BLACKDUCKSCA_TOKEN }} \
+            -bc "cmake . && make" \
+            -d . \
+            -od ../blackduck-cpp-output/${{ matrix.component }} \
+            -proj "jenkins-demo-cpp-${{ matrix.component }}" \
+            -vers "${{ github.sha }}" \
+            -i false
         env:
           BLACKDUCKSCA_URL: ${{ vars.BLACKDUCKSCA_URL }}
           BLACKDUCKSCA_TOKEN: ${{ secrets.BLACKDUCKSCA_TOKEN }}
@@ -117,7 +117,7 @@ jobs:
       - name: Setup Python for Black Duck C/C++ Scanner
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: Install Black Duck C/C++ Scanner
         run: pip install blackduck-c-cpp==3.0.5
@@ -135,14 +135,14 @@ jobs:
       - name: Run Full Project C/C++ Scan with Build Capture
         run: |
           blackduck-c-cpp \
-            --bd_url ${{ vars.BLACKDUCKSCA_URL }} \
-            --api_token ${{ secrets.BLACKDUCKSCA_TOKEN }} \
-            --build_cmd "./build_all.sh" \
-            --build_dir . \
-            --output_path ./blackduck-cpp-output/full-project \
-            --project_name "jenkins-demo-cpp-full" \
-            --project_version "${{ github.sha }}" \
-            --insecure false
+            -bd ${{ vars.BLACKDUCKSCA_URL }} \
+            -a ${{ secrets.BLACKDUCKSCA_TOKEN }} \
+            -bc "./build_all.sh" \
+            -d . \
+            -od ./blackduck-cpp-output/full-project \
+            -proj "jenkins-demo-cpp-full" \
+            -vers "${{ github.sha }}" \
+            -i false
         env:
           BLACKDUCKSCA_URL: ${{ vars.BLACKDUCKSCA_URL }}
           BLACKDUCKSCA_TOKEN: ${{ secrets.BLACKDUCKSCA_TOKEN }}
