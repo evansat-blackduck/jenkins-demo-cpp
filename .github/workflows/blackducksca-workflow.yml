@@ -36,7 +36,7 @@ jobs:
           blackducksca_url: ${{ vars.BLACKDUCKSCA_URL }}
           blackducksca_token: ${{ secrets.BLACKDUCKSCA_TOKEN }}
           ### Mark build status if policy violating issues are found
-          mark_build_status: success  # Set to success, failure, or skip
+          mark_build_status: failure  # Set to success, failure, or skip
           ### Configuration if Bridge diagnostic files needs to be uploaded
           include_diagnostics: true
           ### GITHUB TOKEN
@@ -44,12 +44,125 @@ jobs:
           blackducksca_prComment_enabled: true
 
 
-          ### SCAN CONFIGURATION: Uncomment below to enable
-          # blackducksca_waitForScan: true # Wait for scan completion before proceeding
+          ### SCAN CONFIGURATION: Enabled for comprehensive scanning
+          blackducksca_waitForScan: true # Wait for scan completion before proceeding
 
-          ### FIX PULL REQUEST CREATION: Uncomment below to enable
-          # blackducksca_fixpr_enabled: false
+          ### FIX PULL REQUEST CREATION: Enabled for vulnerability remediation
+          blackducksca_fixpr_enabled: true
 
           ### SARIF report parameters
-          # blackducksca_reports_sarif_create: false # Create SARIF report and upload it as artifact
-          # blackducksca_upload_sarif_report: false # Upload SARIF report in GitHub Advanced Security tab
+          blackducksca_reports_sarif_create: true # Create SARIF report and upload it as artifact
+          blackducksca_upload_sarif_report: true # Upload SARIF report in GitHub Advanced Security tab
+
+  # C/C++ specific scanning with build capture for accurate dependency detection
+  blackduck-cpp-scan:
+    runs-on: ubuntu-latest
+    needs: blackducksca
+    strategy:
+      matrix:
+        component: [client, server, utility_library]
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Setup Python for Black Duck C/C++ Scanner
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Black Duck C/C++ Scanner
+        run: pip install blackduck-c-cpp==3.0.5
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Setup Build Environment
+        run: |
+          mkdir -p blackduck-cpp-output/${{ matrix.component }}
+          chmod +x build_all.sh
+
+      - name: Run C/C++ Scan with Build Capture - ${{ matrix.component }}
+        run: |
+          cd ${{ matrix.component }}
+          blackduck-c-cpp \
+            --bd_url ${{ vars.BLACKDUCKSCA_URL }} \
+            --api_token ${{ secrets.BLACKDUCKSCA_TOKEN }} \
+            --build_cmd "cmake . && make" \
+            --build_dir . \
+            --output_path ../blackduck-cpp-output/${{ matrix.component }} \
+            --project_name "jenkins-demo-cpp-${{ matrix.component }}" \
+            --project_version "${{ github.sha }}" \
+            --insecure false
+        env:
+          BLACKDUCKSCA_URL: ${{ vars.BLACKDUCKSCA_URL }}
+          BLACKDUCKSCA_TOKEN: ${{ secrets.BLACKDUCKSCA_TOKEN }}
+
+      - name: Upload C/C++ Scan Results - ${{ matrix.component }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackduck-cpp-scan-results-${{ matrix.component }}
+          path: blackduck-cpp-output/${{ matrix.component }}/
+          retention-days: 7
+
+  # Full project scan with build capture
+  blackduck-cpp-full-scan:
+    runs-on: ubuntu-latest
+    needs: [blackducksca, blackduck-cpp-scan]
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Setup Python for Black Duck C/C++ Scanner
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Black Duck C/C++ Scanner
+        run: pip install blackduck-c-cpp==3.0.5
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Setup Build Environment
+        run: |
+          mkdir -p blackduck-cpp-output/full-project
+          chmod +x build_all.sh
+
+      - name: Run Full Project C/C++ Scan with Build Capture
+        run: |
+          blackduck-c-cpp \
+            --bd_url ${{ vars.BLACKDUCKSCA_URL }} \
+            --api_token ${{ secrets.BLACKDUCKSCA_TOKEN }} \
+            --build_cmd "./build_all.sh" \
+            --build_dir . \
+            --output_path ./blackduck-cpp-output/full-project \
+            --project_name "jenkins-demo-cpp-full" \
+            --project_version "${{ github.sha }}" \
+            --insecure false
+        env:
+          BLACKDUCKSCA_URL: ${{ vars.BLACKDUCKSCA_URL }}
+          BLACKDUCKSCA_TOKEN: ${{ secrets.BLACKDUCKSCA_TOKEN }}
+
+      - name: Upload Full Project C/C++ Scan Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackduck-cpp-scan-results-full-project
+          path: blackduck-cpp-output/full-project/
+          retention-days: 7
+
+      - name: Create Scan Summary
+        run: |
+          echo "# Black Duck C/C++ Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Components Scanned:" >> $GITHUB_STEP_SUMMARY
+          echo "- Client component" >> $GITHUB_STEP_SUMMARY
+          echo "- Server component" >> $GITHUB_STEP_SUMMARY
+          echo "- Utility library component" >> $GITHUB_STEP_SUMMARY
+          echo "- Full project build" >> $GITHUB_STEP_SUMMARY
+          echo "## Scan Details:" >> $GITHUB_STEP_SUMMARY
+          echo "- Build capture enabled for accurate dependency detection" >> $GITHUB_STEP_SUMMARY
+          echo "- Project version: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Scan artifacts uploaded for review" >> $GITHUB_STEP_SUMMARY
