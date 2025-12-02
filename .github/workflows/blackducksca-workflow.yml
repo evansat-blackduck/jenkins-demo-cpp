@@ -86,10 +86,11 @@ jobs:
       - name: Run C/C++ Scan with Build Capture - ${{ matrix.component }}
         run: |
           cd ${{ matrix.component }}
+          mkdir -p build
           blackduck-c-cpp \
             -bd ${{ vars.BLACKDUCKSCA_URL }} \
             -a ${{ secrets.BLACKDUCKSCA_TOKEN }} \
-            -bc "cmake . && make" \
+            -bc "cmake -B build . && cmake --build build" \
             -d . \
             -od ../blackduck-cpp-output/${{ matrix.component }} \
             -proj "jenkins-demo-cpp-${{ matrix.component }}" \
@@ -132,13 +133,42 @@ jobs:
         run: |
           mkdir -p blackduck-cpp-output/full-project
           chmod +x build_all.sh
+          # Create a proper build script for CMake projects
+          cat > enhanced_build.sh << 'EOF'
+          #!/bin/bash
+          set -e
+          
+          echo "Building utility library..."
+          cd utility_library
+          mkdir -p build
+          cmake -B build .
+          cmake --build build
+          cd ..
+          
+          echo "Building server..."
+          cd server
+          mkdir -p build
+          cmake -B build .
+          cmake --build build
+          cd ..
+          
+          echo "Building client..."
+          cd client
+          mkdir -p build
+          cmake -B build .
+          cmake --build build
+          cd ..
+          
+          echo "All components built successfully!"
+          EOF
+          chmod +x enhanced_build.sh
 
       - name: Run Full Project C/C++ Scan with Build Capture
         run: |
           blackduck-c-cpp \
             -bd ${{ vars.BLACKDUCKSCA_URL }} \
             -a ${{ secrets.BLACKDUCKSCA_TOKEN }} \
-            -bc "./build_all.sh" \
+            -bc "./enhanced_build.sh" \
             -d . \
             -od ./blackduck-cpp-output/full-project \
             -proj "jenkins-demo-cpp-full" \
